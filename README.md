@@ -39,4 +39,34 @@ from @TALK_TO_DOC_REPO/branches/main/pdf/;
 ALTER STAGE pdfdocs REFRESH;
 
 ls @pdfdocs/pdf;
+
+-- create notebook stage
+create or replace stage notebook_stage DIRECTORY = (ENABLE = TRUE) ENCRYPTION = (TYPE = 'SNOWFLAKE_SSE');
+
+-- copy pdfs from github to internal stage
+copy files into @notebook_stage/
+from @TALK_TO_DOC_REPO/branches/main/notebook/;
+
+list @notebook_stage;
+
+-- Create Notebook
+CREATE or replace NOTEBOOK __TALK_TO_DOCS_NOTEBOOK_FINAL
+ FROM '@TALK_TO_DOC.public.notebook_stage'
+ MAIN_FILE = 'notebook_app.ipynb'
+ QUERY_WAREHOUSE = 'COMPUTE_WH';
+
+-- create sis stage
+create or replace stage sis_stage DIRECTORY = (ENABLE = TRUE) ENCRYPTION = (TYPE = 'SNOWFLAKE_SSE');
+
+-- copy pdfs from github to internal stage
+copy files into @sis_stage/
+from @TALK_TO_DOC_REPO/branches/main/streamlit/;
+
+list @sis_stage;
+
+CREATE OR REPLACE STREAMLIT __TALK_TO_DOCS_SIS
+ROOT_LOCATION = '@TALK_TO_DOC.public.sis_stage'
+MAIN_FILE = '/streamlit-talktodocs.py'
+QUERY_WAREHOUSE = 'COMPUTE_WH';
+
 ```
