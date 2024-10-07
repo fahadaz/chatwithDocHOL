@@ -1,4 +1,4 @@
-# chatwithDocHOL
+# Chat with your Docs HOL
 Please execute following code to setup
 
 ```
@@ -58,12 +58,13 @@ CREATE or replace NOTEBOOK __TALK_TO_DOCS_NOTEBOOK_FINAL
 -- create sis stage
 create or replace stage sis_stage DIRECTORY = (ENABLE = TRUE) ENCRYPTION = (TYPE = 'SNOWFLAKE_SSE');
 
--- copy pdfs from github to internal stage
+-- copy streamlit from github to internal stage
 copy files into @sis_stage/
 from @TALK_TO_DOC_REPO/branches/main/streamlit/;
 
 list @sis_stage;
 
+-- create streamlit page
 CREATE OR REPLACE STREAMLIT __TALK_TO_DOCS_SIS
 ROOT_LOCATION = '@TALK_TO_DOC.public.sis_stage'
 MAIN_FILE = '/streamlit-talktodocs.py'
