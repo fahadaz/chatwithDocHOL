@@ -1,5 +1,5 @@
 # Chat with your Docs HOL
-Please execute following code to setup
+Navigate to Worksheets in Snowsight, click "+" in the top-right corner to create a new Worksheet, and choose "SQL Worksheet". Copy below code and Paste in worksheet
 
 ```
 USE ROLE ACCOUNTADMIN;
